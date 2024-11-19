@@ -1,0 +1,43 @@
+### model
+model_name_or_path: mistralai/Mistral-7B-v0.1
+hf_hub_token: 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
+
+### method
+stage: dpo
+do_train: true
+finetuning_type: lora
+lora_target: all
+pref_beta: 0.1
+pref_loss: sigmoid  # choices: [sigmoid (dpo), orpo, simpo]
+deepspeed: examples/deepspeed/ds_z3_config.json
+
+### dataset
+dataset: ultrafeedback
+template: mistral
+cutoff_len: 1024
+max_samples: 50000
+overwrite_cache: true
+preprocessing_num_workers: 16
+
+### output
+output_dir: saves/mistral_7B_lora_dpo_ultrafeedback_50000
+logging_steps: 10
+save_steps: 500
+plot_loss: true
+overwrite_output_dir: true
+
+### train
+per_device_train_batch_size: 4
+gradient_accumulation_steps: 1
+learning_rate: 3.0e-6
+num_train_epochs: 1.0
+lr_scheduler_type: cosine
+warmup_ratio: 0.1
+bf16: true
+ddp_timeout: 180000000
+
+### eval
+val_size: 0.05
+per_device_eval_batch_size: 1
+eval_strategy: steps
+eval_steps: 500
